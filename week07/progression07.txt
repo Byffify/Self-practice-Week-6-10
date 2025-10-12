@@ -1,0 +1,10 @@
+ความต่างของผลลัพธ์จาก lap
+- บรรทัด 1 Sample italic Text จะแสดงเป็นตัวเอียง เพราะ innerHTML จะ ตีความสตริงเป็น HTML แล้วสร้าง <i> ภายใน <p>
+- บรรทัด 2 จะเห็นเป็นตัวอักษรเหมือนกับที่เราใส่เพิ่มเข้าไป: <i>Sample italic Text</i> เพราะ innerText มองเป็นข้อความล้วน ไม่ตีความแท็ก
+- บรรทัด 3 ก็เช่นกัน จะเห็น: <i>Sample italic Text</i> เพราะ textContent ก็จะไม่ตีความแท็กทำให้ผลลัพธ์ออกมาเหมือนกับ innerText
+
+ซึ่งความต่างก็คือ
+
+innerHTML : ตีความ string เป็น html
+innerText : แสดงขอความที่สามารถ render ได้ตาม css
+textContent : สามารถอ่านข้อความดิบของ node ไม่สนใจ style css 

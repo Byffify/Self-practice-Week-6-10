@@ -1,0 +1,46 @@
+project
+- import module function จาก quote.js
+- ทำการเข้าถึง elementById('quote-list')
+- function renderQuotes()
+    quoteList.innerHTML = ''; --> ทำการล้างหรือลบค่าที่มีอยู่ก่อนหน้าโดยใช้ innerHTML = string เปล่า
+
+    if (typeof getAllQuotes === 'function') { --> เช็คว่าตัวแปร getAllQuotes ที่รับเข้ามาเป็น function หรือไม่
+        const result = getAllQuotes() --> กำหนดให้ result = function getAllQuotes ที่เรา import เข้ามา
+        if (Array.isArray(result)) { --> เช็คอีกครั้งว่าตัว result เป็น array หรือไม่
+        quotes = result --> ถ้าใช่ให้ไปเปลี่ยนค่าขอ quotes ที่อยู่นอก function renderQuotes() ให้เป็น result
+        } else { --> ถ้าไม่ใช่ให้ทำการกำหนด quotes = empty array
+        quotes = []
+        }
+    } else { --> ถ้าไม่ใช่ให้ทำการกำหนด quotes = empty array
+        quotes = []
+    }
+
+    for (let i = 0; i < quotes.length; i++) { --> loop โดย condition คือต้องไม่เกินความยาวของ quotes
+        const q = quotes[i]; --> q เก็บค่า quote ปัจจุบันที่ loop
+        const p = document.createElement('p') --> p เก็บตัวแปรการสร้าง element p
+        const content = q && q.content ? q.content : ''   --> เช็คว่า q และ content ของ q นั้นมีค่ามั้ย ถ้ามีใช้ค่านั้น ถ้ามีไม่ให้เป็น empty string
+        const author  = q && q.author  ? q.author  : 'Unknown' --> เช็คว่า q และ author ของ q นั้นมีค่ามั้ย ถ้ามีใช้ค่านั้น ถ้ามีไม่ให้เป็น Unknown
+        p.textContent = `${content} --> ${author}` รวมข้อความแล้วนำไปใส่ในตัว element p ซึ่งใช้ textContent จะไม่ถูกตีความเป็น HTML
+        quoteList.appendChild(p) --> เพิ่มค่าไปต่อท้ายของ element p ลงใน quoteList
+    }
+
+
+Practice1
+- เข้าถึง element ต่างๆเพื่อที่จะ add คำสั่งเข้าไป
+
+addBorder?.addEventListener("click" , () => { --> เป็น event เมื่อกดจะทำ function ที่เรากำหนดไว้
+    box.classList.add("bordered") --> เมื่อมีการคลิกให้ไปเข้าถึง class bordered เพื่อที่จะ add ขอบ
+})
+rmBorder?.addEventListener("click" , () => {
+    box.classList.remove("bordered") --> เมื่อมีการคลิกให้ไปเข้าถึง class bordered เพื่อที่จะ remove ขอบ
+})
+tgBorder?.addEventListener("click" , () => {
+    box.classList.toggle("bordered") --> เมื่อมีการคลิกให้ไปเข้าถึง class bordered เพื่อที่จะ สลับ ขอบที่มีอยู่
+})
+
+Practice2
+- ใช้ getElementById("box") เพื่อเข้าถึง id ของ box
+- ใช้ document.querySelectorAll('button[data-color]') เพื่อเข้าถึง tag button ทุกอันที่มี data-color เป็น attribbute
+- ใช้ forEach() เพื่อ loop event ของ click
+- สร้างตัวแปร color เพื่อเก็บ ค่าของ dataset.color
+- box.style.backgroundColor เพื่อเปลี่ยนสีตามที่เราไปเรียกใช้มา
