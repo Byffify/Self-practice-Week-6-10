@@ -1,0 +1,158 @@
+project
+- import function จาก quote.js โดยใช้ ./ เพราะอยู่ใน folder เดียวกัน
+- เข้าถึง id แต่ละตัวผ่านคำสั่ง document.getElementById()
+- เข้าถึงทุก element ที่อยู่ใน id ของ randomQuoteDisplay
+
+function createQuoteElement(quote) {
+
+  const divElement = document.createElement('div') --> สร้าง element ใหม่ด้วย tag div
+  divElement.dataset.id = quote.id --> เก็บ id ลงใน data-id 
+  
+  const author = document.createElement('p') --> สร้าง element ใหม่ด้วย tag p
+  author.textContent = quote.author --> เพิ่มข้อความจาก quote.author ลงใน author
+  
+  const content = document.createElement('p') --> สร้าง element ใหม่ด้วย tag p
+  content.textContent = quote.content --> เพิ่มข้อความจาก quote.content ลงใน content
+
+  const editBtn = document.createElement('button') --> สร้าง element ใหม่ด้วย tag button
+  editBtn.className = 'edit-btn' --> เข้าถึง class name ชื่อ edit-btn
+  editBtn.textContent = "Edit" --> เพิ่มข้อความ Edit
+  editBtn.dataset.id = quote.id --> เก็บ id ลงใน data-id 
+  editBtn.addEventListener("click" , () => { --> สร้างปุ่ม แก้ไข แล้วนำไปผูกกับ event click
+    contentInput.value = quote.content --> เพิ่ม content ลงใน contentInput
+    authorInput.value = quote.author --> เพิ่ม author ลงใน authorInput
+    idInput.value = quote.id --> เก็บ id ลงใน idInput
+  })
+
+  const rmBtn = document.createElement('button') --> สร้าง element ใหม่ด้วย tag button
+  rmBtn.className = 'delete-btn' --> เข้าถึง class name ชื่อ delete-btn
+  rmBtn.textContent = "Delete" --> เพิ่มข้อความ Delete
+  rmBtn.dataset.id = quote.id --> เก็บ id ลงใน data-id
+  rmBtn.addEventListener("click" , () => { --> สร้างปุ่ม ลบ แล้วนำไปผูกกับ event click
+    deleteQuote(quote.id) --> ลบ id ออกจากฐานข้อมูล
+    deleteQuoteFromDOM(quote.id) --> ลบ id ออกจากหน้าจอ
+  })
+
+    divElement.append(content,author,editBtn,rmBtn) --> เพิ่ม content,author,editBtn,rmBtn ไปต่อท้ายใน divElement
+    return divElement --> คืนค่า divElement ไปที่ function
+}
+
+form.addEventListener("submit" , y => { --> สร้างปุ่ม submit แล้วนำไปผูกกับ event submit ที่ form
+  y.preventDefault() --> ป้องกันไม่ให้หน้า page รีเฟรช
+
+  const newContent = contentInput.value --> อ่านค่าจาก input ไปเก็บในตัวแปร newContent
+  const newAuthor = authorInput.author --> อ่านค่าจาก input ไปเก็บในตัวแปร newAuthor
+  const newId = idInput.value --> id ที่ซ่อนไว้ในฟอร์ม ซึ่งถ้ามีการแก้ไขจะมีตัวเลข แต่ว่าถ้ามีการเพิ่มใหม่ก็จะว่างเปล่า
+
+  if (newId === "") { --> เช็คว่า newId ว่างเปล่าหรือไม่
+    const newQuote = addQuote(newContent,newAuthor) --> ถ้าใช่ ให้เรียกใช้ function addQuote
+    addQuoteToDOM(newQuote) --> เพิ่ม content ที่เราใส่ไว้ใน newQuote ไปยัง DOM 
+  } else {
+    const update = updateQuote(Number(newId),newContent,newAuthor) --> ถ้าไม้ใช่ ให้เรียกใช้ function updateQuote
+    updateQuoteInDOM(update) --> อัพเดต content ที่เราใส่ไว้ในตัวแปร update ไปยัง DOM
+  }
+
+  form.reset() --> เคลียฟอร์มให้กลับมาว่าง
+  idInput.value = "" --> ทำให้ idInput เป็นค่าว่าง
+})
+
+randomBtn.addEventListener("click" , showRandomQuote) --> เชื่อม event click กับปุ่ม randomBtn โดยเชื่อมกับ function showRandomQuote
+
+// Add, edit, delete quote functions
+
+function addQuoteToDOM(quote) {
+  const add = document.querySelector(`[data-id = "${quote.id}"]`) --> ใช้ querySelector เพื่อเข้าถึง id แบบยืดหยุ่นเพราะว่า id มีการเปลี่ยนแปลง
+  quoteList.append(add) --> เพิ่ม id เข้าไปในต่อท้ายใน quoteList
+}
+
+function updateQuoteInDOM(quote) {
+  const findId = document.querySelector(`[data-id = "${quote.id}"]`) --> ใช้ querySelector เพื่อเข้าถึง id แบบยืดหยุ่นเพราะว่า id มีการเปลี่ยนแปลง
+  const updateId = findId.querySelectorAll('p') --> นำ findId มาหา element ทุกตัวที่เป็น tag p
+  updateId[0].textContent = quote.content --> โดยอัพเดตตำแหน่งแรกเป็น content
+  updateId[1].textContent = quote.author --> โดยอัพเดตตำแหน่งที่ 2 เป็น author
+}
+
+function deleteQuoteFromDOM(id) {
+  const del = document.querySelector(`[data-id = "${id}"]`) --> ใช้ querySelector เพื่อเข้าถึง id แบบยืดหยุ่นเพราะว่า id มีการเปลี่ยนแปลง
+  del.remove() --> พอเราหา quote จาก id ที่เราต้องการได้แล้วก็จะลบออกไปจาก DOM
+}
+
+function renderQuotes() {
+    quoteList.innerHTML = '' --> ลบค่าที่มีอยู่ก่อนหน้าโดยกำหนดให้ใช้ innerHTML เป็น string เปล่าและ
+
+  if (typeof getAllQuotes === 'function') { --> เช็คว่า type ของ getAllQuotes เป็น function หรือไม่
+    const result = getAllQuotes() --> ถ้าใช่่จะกำหนดให้ function getAllQuotes() ไปเก็บในตัวแปร result
+    if (Array.isArray(result)) { --> เช็คว่า result เก็บเป็น array หรือไม่
+      quotes = result --> ถ้าใช่ จะกำหนด ค่าของ result ไปใน quotes
+    } else {
+      quotes = []  --> ถ้าไม่ใช่ให้กำหนดเป็น array เปล่า
+    }
+  } else {
+    quotes = [] --> ถ้าไม่ใช่ให้กำหนดเป็น array เปล่า
+  }
+
+  for (let i = 0; i < quotes.length; i++) { --> เข้า loop โดยกำหนด condition คือ i < quotes.length
+    const q = quotes[i] --> q เก็บค่า quotes ปัจจุบัน
+    const p = document.createElement('p') --> สร้าง element ที่เป็น tag p และนำไปเก็บใน tag p
+    const content = q && q.content ? q.content : '' --> เช็คว่า content ว่างหรือเปล่าถ้าว่างให้เป็น string ว่าง หรือ ถ้าไม่ว่างให้ใช้ค่านั้น
+    const author  = q && q.author  ? q.author  : 'Unknown' --> เช็คว่า author ว่างหรือเปล่าถ้าว่างให้เป็น Unknown หรือ ถ้าไม่ว่างให้ใช้ค่านั้น
+    p.textContent = `${content} --> ${author}` --> กำหนดรูปแบบของข้อความ และนำไปเก็บใน element ที่เราสร้าง p ด้วย textContent
+    quoteList.appendChild(p) --> นำข้อความข้อเราไปเพิ่มใน quoteList ที่เป้นตัวเก็บทั้งหมดโดยต่อหลัง
+  }
+}
+
+function showRandomQuote() {
+  const getAll = getAllQuotes() --> เรียก quote ทั้งหมดเก็บลงใน getAll
+  let random = Math.floor(Math.random() * getAll.length) --> สุ่มเลข index จาก 0 จนถึงตัวที่ length-1
+  let select = getAll[random] --> เรียก quote ตำแหน่งตามเลขที่เราสุ่มมาได้
+  randomDisplay.textContent = `${select.content} — ${select.author}` --> แล้วนำไปแสดงผลใน #randomDisplay
+}
+
+Practice1
+- เข้าถึง element userName, email, password, confirmPassword โดยใช้ getElementById เพราะว่ามี id ชัดเจน
+- เข้าถึง element form, message โดยใช้ querySelector เพราะต้องการความยืดหยุ่นจาก ข้อความและฟอร์มที่เปลี่ยนไป
+
+form.addEventListener('submit', function(event) { --> ผูก function ให้ทำงานตอนฟอร์มส่งเป็น event submit
+    event.preventDefault() --> กำหนดไม่ให้รีเฟรชหน้า
+
+    message.textContent = '' --> เคลียร์ข้อความแจ้งผลเดิม
+    message.className = ''  --> ล้าง class ทั้งหมดของ message
+
+    if (userName.value.trim() === '' || email.value.trim() === '' || password.value.trim() === '' || confirmPassword.value.trim() === '') { --> เช็คโดยใช้ .trim เพื่อตัดช่องว่างออกและ 
+        message.textContent = "Missing some values , Please try again!" 
+        message.style.color = 'red'
+        message.classList.add('error')
+        return --> ถ้าไม่ใช่ให้กำหนดข้อความเป็น "Missing some values , Please try again!"  และเป็นสีแดง และใส่คลาส error แล้วหยุดการทำงานต่อเพือเป็นการออกจากฟังก์ชัน
+    }
+
+    if (password.value !== confirmPassword.value) {
+        message.textContent = "Password and confirm do not match , Check again!"
+        message.style.color = 'red'
+        message.classList.add('error')
+        return --> ถ้ารหัสผ่านไม่ตรงกันให้กำหนดข้อความเป็น "Password and confirm do not match , Check again!"  และเป็นสีแดง และใส่คลาส error แล้วหยุดการทำงานต่อเพือเป็นการออกจากฟังก์ชัน
+    }
+
+    message.textContent = "Your data completed!"
+    message.style.color = 'green'
+    message.classList.add('success') --> ถ้าผ่านทุกเงื่อนไข แสดงข้อความสำเร็จ สีเขียว ใส่คลาส success
+})
+
+Practice2
+- เข้าถึง id แต่ละตัวผ่านคำสั่ง document.getElementById()
+
+function log(text, color) { --> function ที่รับ parameter text และ color 2 ตัว
+    const p = document.createElement('p') --> สร้าง element ใหม่ด้วย tag p
+    p.style.color = color
+    p.textContent = text
+    message.append(p) -->กำหนดให้ tag p มีสี และข้อความตามที่เรารับค่าเข้ามาและเพิ่มเข้าไปใน message
+}
+
+keyInput.addEventListener('keydown' , x => { --> สร้าง event keydown
+    const key = x.key --> กำหนดให้ key เก็บค่าในตัวแปร key
+    if (key === 'Enter') { 
+        log(`You pressed: ${key}` , 'blue')
+        return --> ให้คืนค่า โดยเรียกใช้ function log และตามด้วย (`You pressed: ${key}` , 'blue')
+    }
+    log(`You pressed: ${key}` , 'black')
+    return --> ให้คืนค่า โดยเรียกใช้ function log และตามด้วย (`You pressed: ${key}` , 'black')
+})
