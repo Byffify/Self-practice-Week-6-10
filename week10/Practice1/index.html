@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ตั้งค่าหน้าเว็บ (Background / Font / Size)</title>
+  <style>
+    :root { --base-font-size: 18px; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-size: var(--base-font-size);
+      color: #111;
+      background: #fff; /* Default background */
+      display: grid;
+      place-items: start center;
+    }
+    .wrap {
+      width: min(720px, 92vw);
+      margin: 6vh auto;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(2px);
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    h1 { margin: 0 0 8px; font-size: 1.35em; }
+    p.hint { margin: 0 0 20px; color: #555; font-size: .95em; }
+
+    form { display: grid; gap: 16px; }
+    .row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px; }
+    label { font-weight: 600; }
+    input[type="color"], select {
+      height: 40px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      outline: none;
+    }
+    .actions { display: flex; gap: 10px; margin-top: 8px; }
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+    button.save { background: #111827; color: #fff; }
+    button.reset { background: #f3f4f6; color: #111; }
+
+    .note { margin-top: 14px; color: #6b7280; font-size: .9em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>ตั้งค่าการแสดงผลหน้าเว็บ</h1>
+    <form id="prefForm">
+      <div class="row">
+        <label for="bg">1) Background Color</label>
+        <input id="bg" name="bg" type="color" value="#ffffff" />
+      </div>
+
+      <div class="row">
+        <label for="fg">2) Font color</label>
+        <input id="fg" name="fg" type="color" value="#000000" />
+      </div>
+
+      <div class="row">
+        <label for="size">3) Font Size</label>
+        <select id="size" name="size" aria-label="font size">
+          <option value="small">small</option>
+          <option value="medium" selected>medium</option>
+          <option value="large">large</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="save" id="saveBtn">Save</button>
+        <button type="button" class="reset" id="resetBtn">Reset</button>
+      </div>
+
+      <div class="note">Default: พื้นหลัง <b>ขาว</b>, ตัวอักษร <b>ดำ</b>, ขนาด <b>medium</b>.</div>
+    </form>
+  </div>
+  <script src="main.js" type="module"></script>
+</body>
+</html>

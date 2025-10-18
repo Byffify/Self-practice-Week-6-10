@@ -1,0 +1,82 @@
+Project
+function saveQuotes() {
+  if (typeof getAllQuotes !== 'function') return quotes = [] --> เช็คว่า getAllQuotes เป็น function หรือไม่ ถ้าไม่เป็นให้ return quotes = []
+  const result = getAllQuotes() --> กำหนด result = getAllQuotes()
+  if (!Array.isArray(result)) return quotes = [] --> เช็คว่าเป็น array หรือไม่
+  const quote = result --> กำหนดตัวแปร quote เป็น result ซึ่งก็คือ getAllQuotes()
+  const newQuote = JSON.stringify(quote) --> จากนั้นแปลงไฟล์จาก json เป็น value ที่เป็น num หรือ string แต่เก็บในรูปแบบ object
+  localStorage.setItem('saveQuote', newQuote) --> เก็บค่าลงใน localStorage
+}
+
+function loadQuotes() {
+  const saveQuote = localStorage.getItem('saveQuote') --> เรียกใช้ข้อมูลจาก localStorage key saveQuote
+  if (!saveQuote) return --> เช็คว่าเป็นค่าว่างหรือเปล่าถ้าว่างก็จบ function
+  const newQuote = JSON.parse(saveQuote) --> แปลงไฟล์จาก JSON เป็น object ใน array
+  for (let i = 0; i < newQuote.length; i++) { --> loop โดยมี condition newQuote.length
+    const q = newQuote[i] --> q เก็บค่า quote ปัจจุบันตำแหน่งที่ i
+    const content = q && q.content ? q.content : '' --> เช็คว่ามี q.content หรือเปล่า
+    const author = q && q.author ? q.author : '' --> เช็คว่ามี q.author หรือเปล่า
+    addQuote(content,author) --> เรียกใช้ function addQuote และส่ง parameter 2 ตัวตามที่เราเก็บค่ามา
+  }
+  quotes = getAllQuotes() --> เพื่อกันหน้ารีเฟรชแล้วตัว quote หาย ก็ทำการเรียกใช้เพื่อที่จะให้มีตัว quote แสดงใน DOM ตลอดเวลา 
+  renderQuotes() --> เรียกใช้ function renderQuotes เพื่อแสดง quote ของเราทั้งหมด
+}
+
+ภาพรวมคือเรียกใช้ function getAllQuotes เสร็จนำไปเช็ค function and array และแปลงไฟล์จาก JSON โดยใช้ stringify และ ก็เรียกใช้ function addQuote เพื่อเก็บค่าของเราไว้ใน localStorage
+และพอมาใน loadQuotes() ก็ ทำการเรียก quote key saveQuote ตามที่เรากำหนดและนำมาแปลง JSON เป็น object ใน array เพื่อที่จะนำไป loop เพื่อ add ค่าปัจจุบันเข้าไปใน quoteslist และเรียกใช้ getAllQuotes() อีกรอบเพื่อให้แสดงทั้งหมดและ renderQuotes() เพื่อให้แสดงค่า
+
+Practice 1
+document.addEventListener('DOMContentLoaded', () => { --> ใช้ event DOMContentLoaded
+
+
+    const saveBg = localStorage.getItem('bg'); --> ตั้งตัวแปรเพื่อเรียกข้อมูลจาก localStorage ตาม key ที่เรากำหนด
+    const saveFg = localStorage.getItem('fg'); --> ตั้งตัวแปรเพื่อเรียกข้อมูลจาก localStorage ตาม key ที่เรากำหนด
+    const saveSize = localStorage.getItem('size') --> ตั้งตัวแปรเพื่อเรียกข้อมูลจาก localStorage ตาม key ที่เรากำหนด
+    const saveBtn = document.getElementById('saveBtn') --> เรียก element ของ saveBtn
+    const resetBtn = document.getElementById('resetBtn') --> เรียก element ของ resetBtn
+
+    if (saveBg) { --> เช็คว่ามีค่าหรือไม่จากตัวแปรที่เราตั้งขึ้น
+        document.body.style.backgroundColor = saveBg --> กำหนด backgroundColor ตาม saveBg
+        document.getElementById('bg').value = saveBg --> กำหนดค่าของ bg = saveBg 
+    }
+
+    if (saveFg) {
+        document.body.style.color = saveFg --> กำหนด color ตาม saveFg
+        document.getElementById('fg').value = saveFg --> กำหนดค่าของ fg = saveFg 
+    }
+
+    if (saveSize) {
+        document.body.style.fontSize = saveSize --> กำหนด fontSize ตาม saveSize
+        document.getElementById('size').value = saveSize --> กำหนดค่าของ size = saveSize 
+    }
+
+    saveBtn.addEventListener('click' , () => { --> กำหนด event click ของปุ่ม saveBtn
+        const bg = document.getElementById('bg').value --> เข้าถึงค่าของ bg  เพื่อเก็บในตัวแปร bg
+        const fg = document.getElementById('fg').value --> เข้าถึงค่าของ fg เพื่อเก็บในตัวแปร fg
+        const size = document.getElementById('size').value --> เข้าถึงค่าของ size เพื่อเก็บในตัวแปร size
+
+        localStorage.setItem('bg', bg) --> เก็บค่า bg เข้าไปใน localStorage ผ่าน key ชื่อ bg
+        localStorage.setItem('fg', fg) --> เก็บค่า fg เข้าไปใน localStorage ผ่าน key ชื่อ fg
+        localStorage.setItem('size', size) --> เก็บค่า size เข้าไปใน localStorage ผ่าน key ชื่อ size
+
+        document.body.style.backgroundColor = bg --> เปลี่ยนค่าของ backgroundColor ตาม bg
+        document.body.style.color = fg --> เปลี่ยนค่าของ color ตาม fg
+        document.body.style.fontSize = size --> เปลี่ยน fontSize ตามค่าของ size
+    })
+
+    resetBtn.addEventListener('click' , () => { --> กำหนด event click ของปุ่ม resetBtn
+        localStorage.removeItem('bg') --> ลบค่าของ bg ใน localStorage
+        localStorage.removeItem('fg') --> ลบค่าของ fg ใน localStorage
+        localStorage.removeItem('size') --> ลบค่าของ size ใน localStorage
+        
+        document.getElementById('size').value = "medium" --> กำหนดค่า default เป็น medium
+        document.getElementById('fg').value = "#000000" --> กำหนดค่า default เป็น สีดำ
+        document.getElementById('bg').value = '#ffffff' --> กำหนดค่า default เป็น สีขาว
+        
+        document.body.style.fontSize = "medium" --> เปลี่ยน fontSize เป็น medium
+        document.body.style.color = "#000000" --> เปลี่ยน color เป็น สีดำ
+        document.body.style.backgroundColor = '#ffffff' --> เปลี่ยน backgroundColor เป็นสีขาว
+
+    })
+    
+})

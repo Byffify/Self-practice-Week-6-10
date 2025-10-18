@@ -1,0 +1,13 @@
+- เข้าใจใน function ในการนำมาประยุกต์เข้ากับตัว DOM และ localStorage มากขึ้น
+
+- สามารถดูโครงสร้างจาก html และนำมาเขียน JS แบบ DOM ได้
+
+- ส่วนใหญ่จะเป็นการนำมาเขียนตามหลักความเป็นจริง เช่น ขั้นตอนการ save เราก็ต้องมีการ load ต่อ แต่ในแต่ละ function ก็จะมีการเรียกใช้ function อื่นๆ
+
+- แยกเลเยอร์ชัดเจน: Data (State/Storage) → View (Render) → Control (Events)
+
+- วงจรชีวิตเพจ: DOMContentLoaded → loadFromStorage → setState → render → bindEvents
+
+- ออกแบบ key / schema localStorage: ตั้งชื่อคีย์, เวอร์ชัน , รูปแบบข้อมูล (JSON array)
+
+- ใช้ event delegation กับปุ่มแก้ไข/ลบในลิสต์ เพื่อลดการผูก event ทีละชิ้น
